@@ -1,5 +1,5 @@
 <h1 align="center">
-  Oblivionis: A Lightweight Learning and Unlearning Framework for Federated Large Language Models (AAAI 2026)
+  Oblivionis: A Lightweight Learning and Unlearning Framework for Federated Large Language Models
 </h1>
 <p align="center">
   <a href="https://arxiv.org/abs/2508.08875">
@@ -210,13 +210,19 @@ Looking ahead, we plan to gradually include the following components:
 If you find this work useful, please kindly consider citing our paper:
 
 ```bibtex
-@misc{zhang2025oblivionislightweightlearningunlearning,
-      title={Oblivionis: A Lightweight Learning and Unlearning Framework for Federated Large Language Models}, 
-      author={Fuyao Zhang and Xinyu Yan and Tiantong Wu and Wenjie Li and Tianxiang Chen and Yang Cao and Ran Yan and Longtao Huang and Wei Yang Bryan Lim and Qiang Yang},
-      year={2025},
-      eprint={2508.08875},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2508.08875}, 
+@article{zhang2026oblivionis,
+  author    = {Zhang, Fuyao and Yan, Xinyu and Wu, Tiantong and Li, Wenjie
+               and Chen, Tianxiang and Cao, Yang and Yan, Ran
+               and Huang, Longtao and Lim, Wei Yang Bryan and Yang, Qiang},
+  title     = {Oblivionis: A Lightweight Learning and Unlearning Framework
+               for Federated Large Language Models},
+  journal   = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume    = {40},
+  number    = {33},
+  pages     = {28185–28193},
+  year      = {2026},
+  month     = {Mar.},
+  doi       = {10.1609/aaai.v40i33.40045},
+  url       = {https://ojs.aaai.org/index.php/AAAI/article/view/40045},
 }
 ```
