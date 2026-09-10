@@ -1,21 +1,24 @@
 import torch
 import logging
-import logging
-import copy
 from typing import List, Dict, Optional, Union, Tuple
 
 logger = logging.getLogger(__name__)
 
 
 def FedAvg(client_state_dicts, global_model_state_dict=None, client_weights=None):
+    if not client_state_dicts:
+        raise ValueError("At least one client state dict is required for aggregation")
     num_clients = len(client_state_dicts)
     
 
     if client_weights is None:
         client_weights = [1.0 / num_clients] * num_clients
     else:
-
+        if len(client_weights) != num_clients:
+            raise ValueError(f"Expected {num_clients} client weights, got {len(client_weights)}")
         total_weight = sum(client_weights)
+        if total_weight <= 0:
+            raise ValueError("Client weights must have a positive sum")
         client_weights = [w / total_weight for w in client_weights]
     
     global_state_dict = {}
@@ -60,12 +63,18 @@ def FedAvgM(client_state_dicts: List[Dict], global_model_state_dict: Dict,
            proxy_dict: Dict = None, round_idx: int = 0, momentum_factor: float = 0.9, 
            tau: float = 1e-3, client_weights: List[float] = None) -> Tuple[Dict, Dict]:
    
+    if not client_state_dicts:
+        raise ValueError("At least one client state dict is required")
     num_clients = len(client_state_dicts)
+    if client_weights is not None and len(client_weights) != num_clients:
+        raise ValueError(f"Expected {num_clients} client weights, got {len(client_weights)}")
     
     if client_weights is None:
         client_weights = [1.0 / num_clients] * num_clients
     else:
         total_weight = sum(client_weights)
+        if total_weight <= 0:
+            raise ValueError("Client weights must have a positive sum")
         client_weights = [w / total_weight for w in client_weights]
     
     if proxy_dict is None:
@@ -89,13 +98,19 @@ def FedAdagrad(client_state_dicts: List[Dict], global_model_state_dict: Dict,
                server_velocity: Dict = None, epsilon: float = 1e-3, tau: float = 1e-3, 
                client_weights: List[float] = None) -> Tuple[Dict, Dict]:
   
+    if not client_state_dicts:
+        raise ValueError("At least one client state dict is required")
     num_clients = len(client_state_dicts)
+    if client_weights is not None and len(client_weights) != num_clients:
+        raise ValueError(f"Expected {num_clients} client weights, got {len(client_weights)}")
     
     if client_weights is None:
         client_weights = [1.0 / num_clients] * num_clients
     else:
 
         total_weight = sum(client_weights)
+        if total_weight <= 0:
+            raise ValueError("Client weights must have a positive sum")
         client_weights = [w / total_weight for w in client_weights]
     
     if server_velocity is None:
@@ -120,7 +135,11 @@ def FedYogi(client_state_dicts: List[Dict], global_model_state_dict: Dict,
            beta1: float = 0.9, beta2: float = 0.99, epsilon: float = 1e-3, tau: float = 1e-3, 
            client_weights: List[float] = None) -> Tuple[Dict, Dict, Dict]:
 
+    if not client_state_dicts:
+        raise ValueError("At least one client state dict is required")
     num_clients = len(client_state_dicts)
+    if client_weights is not None and len(client_weights) != num_clients:
+        raise ValueError(f"Expected {num_clients} client weights, got {len(client_weights)}")
     
 
     if client_weights is None:
@@ -128,6 +147,8 @@ def FedYogi(client_state_dicts: List[Dict], global_model_state_dict: Dict,
     else:
 
         total_weight = sum(client_weights)
+        if total_weight <= 0:
+            raise ValueError("Client weights must have a positive sum")
         client_weights = [w / total_weight for w in client_weights]
     
     if proxy_dict is None:
@@ -158,13 +179,19 @@ def FedAdam(client_state_dicts: List[Dict], global_model_state_dict: Dict,
            beta1: float = 0.9, beta2: float = 0.99, epsilon: float = 1e-3, tau: float = 1e-3, 
            client_weights: List[float] = None) -> Tuple[Dict, Dict, Dict]:
    
+    if not client_state_dicts:
+        raise ValueError("At least one client state dict is required")
     num_clients = len(client_state_dicts)
+    if client_weights is not None and len(client_weights) != num_clients:
+        raise ValueError(f"Expected {num_clients} client weights, got {len(client_weights)}")
     
 
     if client_weights is None:
         client_weights = [1.0 / num_clients] * num_clients
     else:
         total_weight = sum(client_weights)
+        if total_weight <= 0:
+            raise ValueError("Client weights must have a positive sum")
         client_weights = [w / total_weight for w in client_weights]
     
 

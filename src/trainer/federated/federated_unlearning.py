@@ -29,7 +29,7 @@ class FederatedUnlearningTrainer(FinetuneTrainer):
         num_clients=3,
         target_client_idx=0,
         unlearn_trainer_cls=None,
-        aggregation_strategy="average",
+        aggregation_strategy="FedAvg",
         global_rounds=1,
         unlearn_epochs=None,
         **kwargs
@@ -176,6 +176,12 @@ class FederatedUnlearningTrainer(FinetuneTrainer):
     def unlearn_client_model(self, client_model, client_dataset):
         from trainer import TRAINER_REGISTRY
         trainer_cls = TRAINER_REGISTRY.get(self.unlearn_trainer_cls, None)
+        if trainer_cls is None:
+            available = ", ".join(sorted(TRAINER_REGISTRY))
+            raise ValueError(
+                f"Unknown unlearning trainer {self.unlearn_trainer_cls!r}. "
+                f"Available trainers: {available}"
+            )
 
 
         forget_dataset = client_dataset.forget
@@ -422,6 +428,9 @@ class FederatedUnlearningTrainer(FinetuneTrainer):
                 client_weights=client_weights
             )
             
+        else:
+            raise ValueError(f"Unsupported aggregation strategy: {self.aggregation_strategy}")
+
         if self.is_peft:
             set_peft_model_state_dict(self.model, global_state_dict)
         else:

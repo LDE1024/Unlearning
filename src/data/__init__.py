@@ -124,9 +124,11 @@ def get_federated_data(data, num_clients=3, target_client_idx=0, anchor="retain"
     original_forget: ForgetRetainDataset = data["forget"]
 
     # Parameter validation
-    if target_client_idx >= num_clients:
+    if num_clients <= 0:
+        raise ValueError("num_clients must be positive")
+    if not 0 <= target_client_idx < num_clients:
         raise ValueError(
-            f"Target client index {target_client_idx} >= num_clients {num_clients}"
+            f"target_client_idx must be in [0, {num_clients}), got {target_client_idx}"
         )
     if not isinstance(original_retain, ForgetRetainDataset) or not isinstance(
         original_forget, ForgetRetainDataset
@@ -135,6 +137,10 @@ def get_federated_data(data, num_clients=3, target_client_idx=0, anchor="retain"
 
     # Split retain dataset
     retain_len = len(original_retain.retain)  # Actual length of original retain data
+    if retain_len < num_clients:
+        raise ValueError(
+            f"Retain dataset has {retain_len} samples but {num_clients} clients were requested"
+        )
     chunk_size = retain_len // num_clients
 
     client_datasets = {}

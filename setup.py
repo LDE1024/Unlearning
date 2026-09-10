@@ -18,7 +18,8 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/fyzhang1/Oblivionis",
     license="MIT",
-    packages=find_packages(),
+    packages=find_packages("src"),
+    package_dir={"": "src"},
     install_requires=requirements,  # Uses requirements.txt
     extras_require={
         "lm-eval": [

@@ -11,10 +11,9 @@ class DPO(GradDiff):
 
     def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
 
-        forget_inputs = inputs["forget"]
-        print(forget_inputs)
-        forget_inputs = forget_inputs["forget"]["original"]
-        alternate_inputs = forget_inputs["forget"]["alternate"]
+        forget_group = inputs["forget"]["forget"]
+        forget_inputs = forget_group["original"]
+        alternate_inputs = forget_group["alternate"]
 
         forget_loss, forget_outputs = compute_dpo_loss(
             model=model,

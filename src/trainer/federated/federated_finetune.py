@@ -236,9 +236,8 @@ class FederatedFinetuneTrainer(FinetuneTrainer):
                 # peft_state_dict = copy.deepcopy(get_peft_model_state_dict(model)
                 
                 if not peft_state_dict:
-                    logger.warning(f"Client {model} has no PEFT state dict")
-                    continue
-            
+                    raise ValueError(f"Client {model} has no PEFT state dict")
+
                 client_state_dicts.append(peft_state_dict)
                 logger.debug(f"Client {model} has PEFT state dict")
         else:
@@ -313,6 +312,9 @@ class FederatedFinetuneTrainer(FinetuneTrainer):
                 client_weights=client_weights
             )
         
+        else:
+            raise ValueError(f"Unsupported aggregation strategy: {self.aggregation_strategy}")
+
         if self.is_peft:
             
             # self.model.load_state_dict(global_state_dict, strict=False)

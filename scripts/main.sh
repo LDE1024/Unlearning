@@ -61,7 +61,7 @@ for ((i=0; i<$num_splits; i++)); do
     forget_split=${forget_split} \
     holdout_split=${holdout_split} \
     task_name=${retain_task_name} \
-    model.model_args.pretrained_model_name_or_path=saves/finetune/${retain_task_name} \
+    model.model_args.pretrained_model_name_or_path=saves/retain/${retain_task_name} \
     paths.output_dir=saves/eval/${retain_task_name} \
     hydra.run.dir=saves/eval/${retain_task_name} \
     2>&1 | tee logs/retain/eval/${retain_task_name}.txt

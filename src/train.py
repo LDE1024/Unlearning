@@ -32,8 +32,9 @@ def main(cfg: DictConfig):
     seed_everything(cfg.trainer.args.seed)
     mode = cfg.get("mode", "train")
     model_cfg = cfg.model
+    if model_cfg is None:
+        raise ValueError("Invalid model yaml passed in train config.")
     template_args = model_cfg.template_args
-    assert model_cfg is not None, "Invalid model yaml passed in train config."
     model, tokenizer = get_model(model_cfg)
 
     # Addtional logging for model configuration
@@ -72,11 +73,10 @@ def main(cfg: DictConfig):
             tokenizer=tokenizer,
         )
 
-    evaluator = None
     trainer, trainer_args = load_trainer(
         trainer_cfg=trainer_cfg,
         model=model,
-        train_dataset=data.get("train", None),
+        train_dataset=data.get("train", data.get("forget", None)),
         eval_dataset=data.get("eval", None),
         tokenizer=tokenizer,
         data_collator=collator,

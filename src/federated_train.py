@@ -17,8 +17,9 @@ def main(cfg: DictConfig):
     seed_everything(cfg.trainer.args.seed)
     mode = cfg.get("mode", "train")
     model_cfg = cfg.model
+    if model_cfg is None:
+        raise ValueError("Invalid model yaml passed in train config.")
     template_args = model_cfg.template_args
-    assert model_cfg is not None, "Invalid model yaml passed in train config."
     
 
      # Print training configuration
@@ -102,7 +103,8 @@ def main(cfg: DictConfig):
     collator_cfg = cfg.collator
     collator = get_collators(collator_cfg, tokenizer=tokenizer)
     trainer_cfg = cfg.trainer
-    assert trainer_cfg is not None, "Please set trainer"
+    if trainer_cfg is None:
+        raise ValueError("Please set trainer")
 
     evaluator = None
     eval_cfgs = cfg.get("eval", None)

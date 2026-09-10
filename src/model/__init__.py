@@ -3,6 +3,7 @@ from omegaconf import DictConfig, open_dict
 import os
 import torch
 import logging
+import importlib.util
 from peft import LoraConfig, get_peft_model, TaskType, PeftModel
 
 hf_home = os.getenv("HF_HOME", default=None)
@@ -47,12 +48,24 @@ def get_model(model_cfg: DictConfig):
 
     try:
         # Convert DictConfig to dict for transformersAdd commentMore actions
+        attention_impl = model_args.get("attn_implementation", None)
+        if attention_impl == "flash_attention_2":
+            flash_available = importlib.util.find_spec("flash_attn") is not None
+            if not torch.cuda.is_available() or not flash_available:
+                logger.warning(
+                    "flash_attention_2 requested but CUDA/flash-attn is unavailable; "
+                    "falling back to eager attention"
+                )
+                attention_impl = "eager"
+
         transformers_args = {
             "torch_dtype": torch_dtype,
             "pretrained_model_name_or_path": model_args.pretrained_model_name_or_path,
             "trust_remote_code": model_args.get("trust_remote_code", True),
-            "cache_dir": hf_home
+            "cache_dir": hf_home,
         }
+        if attention_impl is not None:
+            transformers_args["attn_implementation"] = attention_impl
         
         if lora_model_path:
             # Load existing PEFT model

@@ -32,8 +32,11 @@ def load_trainer_args(trainer_args: DictConfig, dataset):
     if warmup_epochs:
         batch_size = trainer_args["per_device_train_batch_size"]
         grad_accum_steps = trainer_args["gradient_accumulation_steps"]
-        num_devices = torch.cuda.device_count()
-        dataset_len = len(dataset)
+        num_devices = max(1, torch.cuda.device_count())
+        if isinstance(dataset, dict):
+            dataset_len = sum(len(item) for item in dataset.values())
+        else:
+            dataset_len = len(dataset) if dataset is not None else 0
         trainer_args["warmup_steps"] = int(
             (warmup_epochs * dataset_len)
             // (batch_size * grad_accum_steps * num_devices)
